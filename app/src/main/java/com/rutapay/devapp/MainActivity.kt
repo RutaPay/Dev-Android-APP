@@ -7,33 +7,56 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.rutapay.devapp.data.ConfigManager
+import com.rutapay.devapp.ui.*
 import com.rutapay.devapp.ui.theme.RutaPayDevAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val configManager = ConfigManager(this)
+        
         setContent {
             RutaPayDevAppTheme {
+                val navController = rememberNavController()
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    NavHost(
+                        navController = navController,
+                        startDestination = "mode_selection",
                         modifier = Modifier.padding(innerPadding)
-                    )
+                    ) {
+                        composable("mode_selection") {
+                            ModeSelectionScreen(
+                                onNavigateToTerminal = { navController.navigate("terminal") },
+                                onNavigateToLogin = { navController.navigate("login") },
+                                onNavigateToSettings = { navController.navigate("settings") }
+                            )
+                        }
+                        composable("settings") {
+                            SettingsScreen(configManager, onBack = { navController.popBackStack() })
+                        }
+                        composable("terminal") {
+                            TerminalScreen(configManager)
+                        }
+                        composable("login") {
+                            LoginScreen(configManager, onLoginSuccess = { 
+                                navController.navigate("client") {
+                                    popUpTo("login") { inclusive = true }
+                                }
+                            })
+                        }
+                        composable("client") {
+                            ClientScreen(configManager)
+                        }
+                    }
                 }
             }
         }
     }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
 }
