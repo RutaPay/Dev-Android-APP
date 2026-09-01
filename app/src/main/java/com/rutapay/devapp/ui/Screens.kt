@@ -1,8 +1,10 @@
 package com.rutapay.devapp.ui
 
+import com.rutapay.devapp.R
 import android.graphics.Bitmap
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -13,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -24,13 +27,18 @@ import com.rutapay.devapp.network.LoginRequest
 import com.rutapay.devapp.network.SignalRManager
 import com.rutapay.devapp.util.QrUtils
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.time.delay
 import kotlinx.coroutines.withContext
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun ModeSelectionScreen(onNavigateToTerminal: () -> Unit, onNavigateToLogin: () -> Unit, onNavigateToSettings: () -> Unit) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -59,7 +67,9 @@ fun SettingsScreen(configManager: ConfigManager, onBack: () -> Unit) {
     var api by remember(initialApi) { mutableStateOf(initialApi) }
     var signalr by remember(initialSignalR) { mutableStateOf(initialSignalR) }
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp)) {
         Text("Configuración", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
@@ -113,7 +123,9 @@ fun TerminalScreen(configManager: ConfigManager) {
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -141,7 +153,9 @@ fun LoginScreen(configManager: ConfigManager, onLoginSuccess: () -> Unit) {
     val scope = rememberCoroutineScope()
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -188,7 +202,9 @@ fun ClientScreen(configManager: ConfigManager) {
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -206,3 +222,37 @@ fun ClientScreen(configManager: ConfigManager) {
         Text(scanResult)
     }
 }
+
+@Composable
+fun SplashScreen(onTimeOut: () -> Unit) {
+        // Box para centrar todo o Column para poner uno debajo de otro
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.secondaryContainer), // Un color de fondo
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            // El logo
+            Image(
+                painter = painterResource(id = R.drawable.logo_rutapay),
+                contentDescription = "Logo de RutaPay",
+                modifier = Modifier.size(180.dp) // Ajuste del tamaño
+            )
+
+            Spacer(modifier = Modifier.height(24.dp)) // Espacio entre logo y texto
+
+            // El texto
+            Text(
+                text = "Empieza a viajar!",
+                style = MaterialTheme.typography.displayLarge,
+                color = MaterialTheme.colorScheme.onSecondaryContainer // Color del texto
+            )
+        }
+
+        // Temporizador para la pantalla de presentación
+        LaunchedEffect(Unit) {
+            delay(3000)
+            onTimeOut()
+        }
+    }

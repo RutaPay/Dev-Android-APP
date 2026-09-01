@@ -28,9 +28,17 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     NavHost(
                         navController = navController,
-                        startDestination = "mode_selection",
+                        startDestination = "splash",
                         modifier = Modifier.padding(innerPadding)
                     ) {
+                        composable("splash") {
+                            SplashScreen(onTimeOut = {
+                                navController.navigate("mode_selection") {
+                                    // Esto evita que el usuario regrese al Splash al darle atrás
+                                    popUpTo("splash") { inclusive = true }
+                                }
+                            })
+                        }
                         composable("mode_selection") {
                             ModeSelectionScreen(
                                 onNavigateToTerminal = { navController.navigate("terminal") },
