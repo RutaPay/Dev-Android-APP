@@ -3,6 +3,7 @@ package com.rutapay.devapp.ui
 import com.rutapay.devapp.R
 import android.graphics.Bitmap
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -13,7 +14,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -29,7 +32,6 @@ import com.rutapay.devapp.util.QrUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.time.delay
 import kotlinx.coroutines.withContext
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -225,34 +227,98 @@ fun ClientScreen(configManager: ConfigManager) {
 
 @Composable
 fun SplashScreen(onTimeOut: () -> Unit) {
-        // Box para centrar todo o Column para poner uno debajo de otro
-        Column(
+    val characters = "RutaPay".map { it.toString() }
+    
+    // Animación de entrada para el bus
+    val busAlpha = remember { Animatable(0f) }
+    val busScale = remember { Animatable(0.8f) }
+
+    LaunchedEffect(Unit) {
+        // Primero aparece el bus
+        launch {
+            busAlpha.animateTo(1f, animationSpec = tween(1000))
+        }
+        launch {
+            busScale.animateTo(1f, animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy))
+        }
+        
+        // El tiempo total del Splash
+        delay(3000)
+        onTimeOut()
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
+        // Patrón geométrico superior izquierdo
+        Image(
+            painter = painterResource(id = R.drawable.bg_pattern),
+            contentDescription = null,
             modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.secondaryContainer), // Un color de fondo
+                .size(250.dp)
+                .align(Alignment.TopStart)
+                .graphicsLayer {
+                    translationX = -50.dp.toPx()
+                    translationY = -50.dp.toPx()
+                },
+            contentScale = ContentScale.Fit
+        )
+
+        Column(
+            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // El logo
+            // Bus Icon (más amigable)
             Image(
-                painter = painterResource(id = R.drawable.logo_rutapay),
-                contentDescription = "Logo de RutaPay",
-                modifier = Modifier.size(180.dp) // Ajuste del tamaño
+                painter = painterResource(id = R.drawable.ic_bus),
+                contentDescription = "Bus Icon",
+                modifier = Modifier
+                    .size(220.dp)
+                    .graphicsLayer {
+                        alpha = busAlpha.value
+                        scaleX = busScale.value
+                        scaleY = busScale.value
+                    }
             )
 
-            Spacer(modifier = Modifier.height(24.dp)) // Espacio entre logo y texto
+            Spacer(modifier = Modifier.height(40.dp))
 
-            // El texto
-            Text(
-                text = "Empieza a viajar!",
-                style = MaterialTheme.typography.displayLarge,
-                color = MaterialTheme.colorScheme.onSecondaryContainer // Color del texto
-            )
-        }
-
-        // Temporizador para la pantalla de presentación
-        LaunchedEffect(Unit) {
-            delay(3000)
-            onTimeOut()
+            // Bouncing Text
+            Row {
+                characters.forEachIndexed { index, char ->
+                    BouncingLetter(
+                        letter = char,
+                        delayMillis = index * 100 // Retraso secuencial
+                    )
+                }
+            }
         }
     }
+}
+
+@Composable
+fun BouncingLetter(letter: String, delayMillis: Int) {
+    val infiniteTransition = rememberInfiniteTransition(label = "letterBounce")
+    val yOffset by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = -20f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 400, easing = LinearOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse,
+            initialStartOffset = StartOffset(delayMillis)
+        ),
+        label = "yOffset"
+    )
+
+    Text(
+        text = letter,
+        style = MaterialTheme.typography.displayMedium,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier.graphicsLayer {
+            translationY = yOffset
+        }
+    )
+}
