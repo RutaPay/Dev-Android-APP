@@ -1,15 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Patron de red (esquina superior izquierda) - RutaPay -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="200dp"
-    android:height="200dp"
-    android:viewportWidth="100"
-    android:viewportHeight="100">
+    android:width="172dp"
+    android:height="191dp"
+    android:viewportWidth="687"
+    android:viewportHeight="765">
     <path
-        android:fillColor="#78C0E0"
-        android:fillAlpha="0.2"
-        android:pathData="M0,0 L100,0 L0,100 Z" />
+        android:fillColor="#D5E8F3"
+        android:pathData="M0,0 L687,0 L374,189 L307,275 L234,400 L104,620 L0,765 Z" />
     <path
-        android:strokeColor="#78C0E0"
-        android:strokeWidth="0.5"
-        android:fillAlpha="0"
-        android:pathData="M0,0 L80,0 L0,80 Z M0,0 L60,0 L0,60 Z M0,0 L40,0 L0,40 Z M0,0 L20,0 L0,20 Z" />
+        android:fillColor="#BBDCEC"
+        android:pathData="M0,0 L487,0 L377,190 L272,310 L234,400 L112,465 L0,495 Z" />
+    <path
+        android:fillColor="#9DCCE4"
+        android:pathData="M0,0 L244,0 L200,145 L157,320 L42,375 L0,405 Z" />
+    <path
+        android:fillColor="#7DBEDE"
+        android:pathData="M0,0 L220,0 L187,210 L102,355 L0,455 Z" />
+    <path
+        android:fillColor="#A9CDE0"
+        android:pathData="M102,465 L234,400 L104,620 L62,675 Z" />
+    <path
+        android:fillColor="#7FB4D0"
+        android:pathData="M0,395 L157,320 L234,400 L102,465 L0,495 Z" />
+    <path
+        android:fillColor="#5FA2C6"
+        android:pathData="M0,480 L102,465 L27,715 L0,765 Z" />
+    <path
+        android:fillColor="#4A92B6"
+        android:pathData="M0,470 L102,465 L0,675 Z" />
+    <path
+        android:strokeColor="#4F94B9"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M217,0 L120,100M222,0 L324,173M222,0 L384,42M487,0 L384,42M120,100 L384,42M120,100 L324,173M384,42 L324,173M0,60 L120,100M0,170 L324,173M120,100 L277,325M324,173 L314,275M120,100 L40,352M40,352 L0,315M40,352 L272,343M40,352 L234,395M40,352 L104,464M104,464 L234,405M104,464 L102,605M0,180 L40,352M324,173 L40,352" />
+    <path
+        android:fillColor="#5B9FC4"
+        android:pathData="M107,100 a13,13 0 1,0 26,0 a13,13 0 1,0 -26,0 ZM372,42 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 ZM312,173 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 ZM28,352 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 ZM92,464 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 ZM478,79 a11,11 0 1,0 22,0 a11,11 0 1,0 -22,0 Z" />
 </vector>

@@ -163,7 +163,10 @@ fun LoginScreen(configManager: ConfigManager, onLoginSuccess: () -> Unit) {
     ) {
         Text("Inicio de Sesión Cliente", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = username, onValueChange = { username = it }, label = { Text("Usuario") })
+        OutlinedTextField(
+            value = username,
+            onValueChange = { username = it },
+            label = { Text("Usuario") })
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
             value = password,
@@ -212,7 +215,7 @@ fun ClientScreen(configManager: ConfigManager) {
     ) {
         Text("Modo Cliente", style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(32.dp))
-        Button(onClick = { 
+        Button(onClick = {
             val options = ScanOptions()
             options.setBeepEnabled(true)
             options.setOrientationLocked(false)
@@ -227,21 +230,22 @@ fun ClientScreen(configManager: ConfigManager) {
 
 @Composable
 fun SplashScreen(onTimeOut: () -> Unit) {
-    val characters = "RutaPay".map { it.toString() }
-    
-    // Animación de entrada para el bus
+    // Animación de entrada para el bus y el logo
     val busAlpha = remember { Animatable(0f) }
     val busScale = remember { Animatable(0.8f) }
 
     LaunchedEffect(Unit) {
-        // Primero aparece el bus
+        // Aparición animada
         launch {
             busAlpha.animateTo(1f, animationSpec = tween(1000))
         }
         launch {
-            busScale.animateTo(1f, animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy))
+            busScale.animateTo(
+                1f,
+                animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy)
+            )
         }
-        
+
         // El tiempo total del Splash
         delay(3000)
         onTimeOut()
@@ -252,16 +256,16 @@ fun SplashScreen(onTimeOut: () -> Unit) {
             .fillMaxSize()
             .background(Color.White)
     ) {
-        // Patrón geométrico superior izquierdo
+        // Patrón geométrico superior izquierdo ajustado para no solaparse con la barra de estado
         Image(
             painter = painterResource(id = R.drawable.bg_pattern),
             contentDescription = null,
             modifier = Modifier
-                .size(250.dp)
+                .size(280.dp)
                 .align(Alignment.TopStart)
                 .graphicsLayer {
-                    translationX = -50.dp.toPx()
-                    translationY = -50.dp.toPx()
+                    translationX = -40.dp.toPx()
+                    translationY = 0.dp.toPx()
                 },
             contentScale = ContentScale.Fit
         )
@@ -271,12 +275,12 @@ fun SplashScreen(onTimeOut: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Bus Icon (más amigable)
+            // Bus Icon (más grande)
             Image(
                 painter = painterResource(id = R.drawable.ic_bus),
                 contentDescription = "Bus Icon",
                 modifier = Modifier
-                    .size(220.dp)
+                    .size(260.dp)
                     .graphicsLayer {
                         alpha = busAlpha.value
                         scaleX = busScale.value
@@ -284,41 +288,22 @@ fun SplashScreen(onTimeOut: () -> Unit) {
                     }
             )
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
-            // Bouncing Text
-            Row {
-                characters.forEachIndexed { index, char ->
-                    BouncingLetter(
-                        letter = char,
-                        delayMillis = index * 100 // Retraso secuencial
-                    )
-                }
-            }
+            // Logo RutaPay (reemplaza las BouncingLetters)
+            Image(
+                painter = painterResource(id = R.drawable.logo_rutapay),
+                contentDescription = "RutaPay Logo",
+                modifier = Modifier
+                    .width(280.dp)
+                    .height(64.dp)
+                    .graphicsLayer {
+                        alpha = busAlpha.value
+                        scaleX = busScale.value
+                        scaleY = busScale.value
+                    },
+                contentScale = ContentScale.Fit
+            )
         }
     }
-}
-
-@Composable
-fun BouncingLetter(letter: String, delayMillis: Int) {
-    val infiniteTransition = rememberInfiniteTransition(label = "letterBounce")
-    val yOffset by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = -20f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 400, easing = LinearOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse,
-            initialStartOffset = StartOffset(delayMillis)
-        ),
-        label = "yOffset"
-    )
-
-    Text(
-        text = letter,
-        style = MaterialTheme.typography.displayMedium,
-        color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.graphicsLayer {
-            translationY = yOffset
-        }
-    )
 }
