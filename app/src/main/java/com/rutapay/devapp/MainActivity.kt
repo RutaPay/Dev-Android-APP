@@ -53,11 +53,30 @@ class MainActivity : ComponentActivity() {
                             TerminalScreen(configManager)
                         }
                         composable("login") {
-                            LoginScreen(configManager, onLoginSuccess = { 
-                                navController.navigate("client") {
-                                    popUpTo("login") { inclusive = true }
+                            LoginScreen(
+                                configManager = configManager,
+                                onLoginSuccess = { 
+                                    navController.navigate("client") {
+                                        popUpTo("login") { inclusive = true }
+                                    }
+                                },
+                                onNavigateToRegister = {
+                                    navController.navigate("register")
                                 }
-                            })
+                            )
+                        }
+                        composable("register") {
+                            RegisterScreen(
+                                configManager = configManager,
+                                onRegisterSuccess = {
+                                    navController.navigate("login") {
+                                        popUpTo("register") { inclusive = true }
+                                    }
+                                },
+                                onNavigateToLogin = {
+                                    navController.popBackStack()
+                                }
+                            )
                         }
                         composable("client") {
                             ClientScreen(configManager)
