@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                             LoginScreen(
                                 configManager = configManager,
                                 onLoginSuccess = { 
-                                    navController.navigate("client") {
+                                    navController.navigate("dashboard") {
                                         popUpTo("login") { inclusive = true }
                                     }
                                 },
@@ -69,7 +69,7 @@ class MainActivity : ComponentActivity() {
                             RegisterScreen(
                                 configManager = configManager,
                                 onRegisterSuccess = {
-                                    navController.navigate("login") {
+                                    navController.navigate("dashboard") {
                                         popUpTo("register") { inclusive = true }
                                     }
                                 },
@@ -77,6 +77,9 @@ class MainActivity : ComponentActivity() {
                                     navController.popBackStack()
                                 }
                             )
+                        }
+                        composable("dashboard") {
+                            DashboardScreen(configManager)
                         }
                         composable("client") {
                             ClientScreen(configManager)
